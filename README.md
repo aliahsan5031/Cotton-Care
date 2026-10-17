@@ -1,64 +1,84 @@
 # CottonCare 🌿
 
-AI diagnosis of cotton leaf disease for farmers, with batch field/lot reports for ginneries, mills and extension programs.
+AI screening of cotton leaf health for farmers, with batch field/lot reports for ginneries, mills and extension programs.
+Built for the NYLP AI Hackathon 2026.
 
-
-**Live demo:** <add Hugging Face Space link>
-**Demo video:** <add link>
-**Team:** <name(s) and roles>
+- **Live demo:** https://huggingface.co/spaces/AliAhsan5031/cottoncare
+- **Demo video:** <add link>
+- **Source code:** https://github.com/aliahsan5031/Cotton-Care
+- **Team:** Ali Ahsan (solo): data, model training, app, deployment and documentation
 
 ## Problem
-Cotton diseases are often spotted late, and buyers have no cheap way to check crop health before sourcing.
+Cotton diseases and pests are often spotted late, and buyers have no cheap way to check crop health before sourcing.
 <Add 2-3 sentences with a real, cited statistic about cotton in Pakistan.>
 
-**Who benefits:** smallholder farmers (diagnosis and advice in Urdu/English) and industry users (ginneries, textile mills, contract-farming and extension programs) who need a quick field/lot health overview.
+**Who benefits:** smallholder farmers (a quick check with advice in English and Urdu) and industry users (ginneries, textile mills, contract-farming and extension programs) who need a fast field/lot health overview.
 
 ## Solution
-1. **Diagnose:** upload a leaf photo, get the condition, a confidence score and plain-language advice.
-2. **Responsible by design:** below 60% confidence the app says "uncertain, get an expert" instead of guessing.
-3. **Batch field/lot report (industry):** upload up to 30 photos, tag farm/field/lot, get a results table, distribution chart, a rule-based Low/Medium/High risk level and a CSV export.
+1. **Diagnose:** upload a leaf photo and get the predicted condition, a confidence score and plain-language advice (English or Urdu).
+2. **Responsible by design:** below 60% confidence the app says "uncertain, ask an expert" instead of guessing. The footer and advice state that the model is weak for curl virus and fusarium wilt.
+3. **Batch field/lot report:** upload up to 30 photos, tag the farm, field and lot, and get a results table, a distribution chart, a rule-based Low/Medium/High risk level and a CSV download.
 
 ## Features
-- Single-photo diagnosis with top-3 predictions
-- Urdu and English advice
+- Single-photo diagnosis with the top-3 predictions
+- English and Urdu advice
 - Low-confidence safeguard
-- Batch mode with CSV export and lot risk level
+- Batch mode with CSV export and a lot risk level
 
 ## Tech stack
 Python, PyTorch/torchvision (ResNet18), Gradio, pandas, matplotlib, Hugging Face Spaces.
 
 ## AI / API usage
-- **Trained model (the core AI):** ResNet18 pretrained on ImageNet, fine-tuned by us on `<dataset name + link + license>`.
-  Stratified 70/15/15 train/val/test split, seed 42. Best epoch chosen on validation, results reported on the untouched test set.
-  **Test accuracy: <fill from metrics.json>** (per-class accuracy and confusion matrix in `metrics.json`).
-- **Gemini API (optional, third-party):** rewrites the built-in advice into short steps. If the key is missing or the call fails, the app falls back to the built-in rule-based guide. No pesticide names or doses are generated.
-- **Rule-based:** the lot risk level (Medium >= 10%, High >= 30% of confidently-diseased photos) is a simple rule of thumb, not a trained or validated quality model.
-- AI coding assistants were used as development help; all code was tested and reviewed by the team.
+- **Trained model (the core AI):** ResNet18 pretrained on ImageNet, fine-tuned on four classes (healthy, bacterial blight, fusarium wilt, curl virus). Training uses class-balanced sampling (square-root weighting), label smoothing and augmentation. The best epoch is chosen on validation macro-F1, and results are reported on a held-out test split. See `train.py` and `metrics.json`.
+- **Advice text:** rule-based, built into `core.py` (no pesticide names or doses; it always tells the user to confirm with an agriculture officer).
+- **Gemini API (optional, third-party):** `core.py` can rewrite the advice with the Gemini API if a `GEMINI_API_KEY` is set. **The deployed demo does not enable it**, so all advice shown there comes from the built-in guide.
+- **Lot risk level:** a simple rule of thumb (Medium at 10% or more and High at 30% or more of confidently-flagged photos), not a trained or validated quality model.
+- An AI coding assistant (Claude) was used as development help. All code was run, tested and reviewed by the author.
+
+## Dataset and credit
+**Cotton Leaf Disease Dataset with Severity Levels**, Mendeley Data, V2, DOI: 10.17632/74jsdxtmx2.2, published 9 January 2025. Authors: <copy from the dataset page's citation box>.
+Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
+**Changes made:** only the `Cotton-Original` images were used (not the augmented sets); severity sub-folders were merged into their disease class; images were resized and normalized; and the data was split 70/15/15 (684 train, 147 validation, 149 test). The dataset authors have not endorsed this project.
+
+## Results (held-out test split, 149 images)
+| Class | Test images | Recall | Precision |
+|---|---|---|---|
+| Healthy | 119 | 97.5% | 93.5% |
+| Bacterial blight | 18 | 88.9% | 100% |
+| Fusarium wilt | 8 | 50.0% | 44.4% |
+| Curl virus | 4 | **0%** | n/a |
+
+Overall accuracy 91.3%, macro-F1 0.59, mean per-class recall 59%. Accuracy looks high mainly because about 80% of the test images are healthy, so the macro-F1 and per-class numbers are the fairer picture. Training images per class: healthy 552, bacterial blight 83, fusarium wilt 32, curl virus 17.
+
+## Model weights
+`model.pt` (about 45 MB) is larger than GitHub's browser upload limit, so the weights are stored in the Hugging Face Space repository:
+https://huggingface.co/spaces/AliAhsan5031/cottoncare/tree/main
+To run locally, download `model.pt` from there and put it next to `app.py`, or retrain with `train.py`.
 
 ## Setup
 ```bash
-git clone <repo-url>
-cd <repo>
+git clone https://github.com/aliahsan5031/Cotton-Care
+cd Cotton-Care
 pip install -r requirements.txt
-# Train (Colab GPU recommended). Dataset folders: data/<class_name>/*.jpg
-python train.py --data data --epochs 8 --out model.pt
+# put model.pt next to app.py (see "Model weights"), or train your own:
+#   python train.py --data <folder-with-one-subfolder-per-class> --epochs 15 --sampling sqrt --out model.pt
 # Optional: enable Gemini rewriting (never commit the key)
 export GEMINI_API_KEY=your_key_here
 python app.py
 ```
-On Hugging Face Spaces, add `GEMINI_API_KEY` under Settings > Secrets and upload `model.pt` next to `app.py`.
 
 ## Screenshots
-<add: diagnosis screen, uncertain case, batch report, CSV>
+<add: diagnosis screen, uncertain result, batch report, CSV>
 
 ## Known limitations
-- Trained on a public dataset; accuracy can drop on blurry, shaded or real-field photos.
-- Class list depends on the dataset, so unsupported diseases are not detected.
+- **Curl virus is not detected** in the held-out test (0 of 4) and fusarium wilt is only partly detected, because the dataset has very few photos of these (17 and 32 training images). A "healthy" result is not a guarantee, and the app says so.
+- The test sets for the rare classes are tiny (4 and 8 images), so their scores are noisy.
+- Dataset photos are cleaner than most real-field photos, so real-world accuracy is likely lower. This was not tested on field photos.
 - Advice is general guidance, not a substitute for an agronomist. The Urdu text should be reviewed by a native speaker.
-- Lot risk is a simple rule on the uploaded sample, not a statistically valid field estimate.
+- The lot risk level is a simple rule on the uploaded sample, not a statistically valid field estimate.
 
 ## Team contributions
-- <Name>: <role and what they built>
+- Ali Ahsan: dataset selection and licensing check, model training and evaluation, app, deployment, documentation.
 
 ## Acknowledgements
-<dataset, libraries, pretrained weights>
+Dataset authors (see above), PyTorch/torchvision, Gradio, Hugging Face Spaces.
