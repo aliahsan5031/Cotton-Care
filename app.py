@@ -11,6 +11,19 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from PIL import Image
 
+# Free Hugging Face Gradio Spaces run on ZeroGPU, which refuses to start unless the
+# app contains at least one @spaces.GPU function. This model is small, so inference
+# stays on CPU (no GPU quota used). This function is never called; it only satisfies
+# the startup check. Locally the `spaces` package does not exist, so we skip it.
+try:
+    import spaces
+
+    @spaces.GPU
+    def _gpu_startup_check():
+        return True
+except ImportError:
+    pass
+
 from core import LOW_CONFIDENCE, llm_advice, lot_risk, status_for
 
 MODEL_PATH = os.environ.get("MODEL_PATH", "model.pt")
