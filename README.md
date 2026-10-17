@@ -1,7 +1,7 @@
 # CottonCare 🌿
 
 AI diagnosis of cotton leaf disease for farmers, with batch field/lot reports for ginneries, mills and extension programs.
-Built for the NYLP AI Hackathon 2026.
+
 
 **Live demo:** <add Hugging Face Space link>
 **Demo video:** <add link>
