@@ -3,7 +3,7 @@
 AI screening of cotton leaf health for farmers, with batch field/lot reports for ginneries, mills and extension programs.
 Built for the NYLP AI Hackathon 2026.
 
-- **Live demo:** https://huggingface.co/spaces/AliAhsan5031/cottoncare
+- **Live demo:** https://huggingface.co/spaces/AliAhsan5031/cotton_care
 - **Demo video:** <add link>
 - **Source code:** https://github.com/aliahsan5031/Cotton-Care
 - **Team:** Ali Ahsan (solo): data, model training, app, deployment and documentation
@@ -56,7 +56,7 @@ Overall accuracy 91.3%, macro-F1 0.59, mean per-class recall 59%. Accuracy looks
 
 ## Model weights
 `model.pt` (about 45 MB) is larger than GitHub's browser upload limit, so the weights are stored in the Hugging Face Space repository:
-https://huggingface.co/spaces/AliAhsan5031/cottoncare/tree/main
+https://huggingface.co/spaces/AliAhsan5031/cotton_care/tree/main
 To run locally, download `model.pt` from there and put it next to `app.py`, or retrain with `train.py`.
 
 ## Setup
