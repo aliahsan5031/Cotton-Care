@@ -1,0 +1,74 @@
+{
+  "classes": [
+    "bacterial blight",
+    "curl virus",
+    "fussarium wilt",
+    "healthy"
+  ],
+  "n_train": 684,
+  "n_val": 147,
+  "n_test": 149,
+  "train_images_per_class": {
+    "bacterial blight": 83,
+    "curl virus": 17,
+    "fussarium wilt": 32,
+    "healthy": 552
+  },
+  "test_images_per_class": {
+    "bacterial blight": 18,
+    "curl virus": 4,
+    "fussarium wilt": 8,
+    "healthy": 119
+  },
+  "sampling": "sqrt",
+  "label_smoothing": 0.1,
+  "epochs": 15,
+  "best_val_macro_f1": 0.7410640799529689,
+  "test_accuracy": 0.912751677852349,
+  "test_balanced_accuracy_mean_recall": 0.5909197012138189,
+  "test_macro_f1": 0.592254556143445,
+  "per_class_test_recall": {
+    "bacterial blight": 0.8888888888888888,
+    "curl virus": 0.0,
+    "fussarium wilt": 0.5,
+    "healthy": 0.9747899159663865
+  },
+  "per_class_test_precision": {
+    "bacterial blight": 0.9411764705882353,
+    "curl virus": 0.0,
+    "fussarium wilt": 0.5,
+    "healthy": 0.9354838709677419
+  },
+  "per_class_test_f1": {
+    "bacterial blight": 0.9142857142857143,
+    "curl virus": 0.0,
+    "fussarium wilt": 0.5,
+    "healthy": 0.9547325102880658
+  },
+  "confusion_matrix_rows_true_cols_pred": [
+    [
+      16,
+      0,
+      1,
+      1
+    ],
+    [
+      0,
+      0,
+      0,
+      4
+    ],
+    [
+      1,
+      0,
+      4,
+      3
+    ],
+    [
+      0,
+      0,
+      3,
+      116
+    ]
+  ]
+}
