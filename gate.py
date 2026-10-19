@@ -13,6 +13,8 @@ Also: simple photo-quality hints (blur, too dark, too bright) so farmers retake 
 """
 from __future__ import annotations
 
+import os
+
 import numpy as np
 from PIL import Image
 
@@ -62,7 +64,8 @@ def check(img: Image.Image, feat=None, stats: dict | None = None) -> dict:
                 "mode": "calibrated" if stats else "basic"}
     if stats is not None and feat is not None:
         score = distance_score(feat, stats)
-        thr = float(stats["threshold"])
+        # GATE_SCALE (Space variable) tightens (<1) or loosens (>1) the gate without retraining.
+        thr = float(stats["threshold"]) * float(os.environ.get("GATE_SCALE", "1"))
         if score > thr:
             return {"ok": False, "reason": "the leaf does not look like the cotton leaves the model was trained on",
                     "score": score, "mode": "calibrated"}
