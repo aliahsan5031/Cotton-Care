@@ -9,9 +9,9 @@ Built for the NYLP AI Hackathon 2026.
 - **Team:** Ali Ahsan (solo): data, model training, app, deployment and documentation
 
 ## Problem
-"Cotton diseases and pests are often spotted late, and buyers have no cheap way to check crop health before sourcing.
-Cotton is one of Pakistan’s most important crops. 4.8 percent yield reduction (or 702,244 bales) in 2025 https://cropprotectionnetwork.org/publications/cotton-disease-loss-estimates-from-the-united-states-2025
-20–30% annual loss of yield, with cotton yields specifically dropping 39% below previous season levels in the 2024–2025 cycle due to heavy foliage and fungal disease pressure combined with adverse weather, from Roots Press / Pakistan Cotton Ginners Association. Diseases and pests such as leaf curl virus are often noticed late, when yield is already lost."
+Cotton diseases are often noticed late, when yield is already lost, and buyers have no cheap way to check crop health before sourcing. Cotton is one of Pakistan's most important crops, so late detection hurts farmers, ginneries and mills alike.
+
+For scale: a 2025 report on US cotton disease losses estimated a 4.8% yield reduction (about 702,244 bales) ([source](https://cropprotectionnetwork.org/publications/cotton-disease-loss-estimates-from-the-united-states-2025)). This is a US figure, included only to show how costly disease can be.
 
 **Who benefits:** smallholder farmers (a quick check with advice in English and Urdu) and industry users (ginneries, textile mills, contract-farming and extension programs) who need a fast field/lot health overview.
 
@@ -74,7 +74,14 @@ python app.py
 ```
 
 ## Screenshots
-<add: diagnosis screen, uncertain result, batch report, CSV>
+Detecting Cotton Leaf Diseases
+<img width="519" height="470" alt="image" src="https://github.com/user-attachments/assets/a9a8b880-ef8b-4674-a2d4-e219f7bb90f6" />
+
+
+Hallucination Detected
+<img width="959" height="472" alt="Screenshot 2026-10-19 195044" src="https://github.com/user-attachments/assets/1ff30bfc-1d57-4746-af9c-9ac55f015ebe" />
+<img width="590" height="379" alt="image" src="https://github.com/user-attachments/assets/2d85e2d4-39b9-4142-b433-32e9116caea0" />
+<img width="452" height="359" alt="image" src="https://github.com/user-attachments/assets/b7e01817-7acb-4ae5-9d1b-89ee37df99b4" />
 
 ## Known limitations
 - **Curl virus is not detected** in the held-out test (0 of 4) and fusarium wilt is only partly detected, because the dataset has very few photos of these (17 and 32 training images). A "healthy" result is not a guarantee, and the app says so.
