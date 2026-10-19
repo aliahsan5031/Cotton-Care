@@ -75,12 +75,16 @@ python app.py
 
 ## Screenshots
 Detecting Cotton Leaf Diseases
+
+
 <img width="519" height="470" alt="image" src="https://github.com/user-attachments/assets/a9a8b880-ef8b-4674-a2d4-e219f7bb90f6" />
 
 
 Hallucination Detected
 <img width="959" height="472" alt="Screenshot 2026-10-19 195044" src="https://github.com/user-attachments/assets/1ff30bfc-1d57-4746-af9c-9ac55f015ebe" />
+
 <img width="590" height="379" alt="image" src="https://github.com/user-attachments/assets/2d85e2d4-39b9-4142-b433-32e9116caea0" />
+
 <img width="452" height="359" alt="image" src="https://github.com/user-attachments/assets/b7e01817-7acb-4ae5-9d1b-89ee37df99b4" />
 
 ## Known limitations
