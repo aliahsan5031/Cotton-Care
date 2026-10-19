@@ -12,6 +12,9 @@ LOW_CONFIDENCE = 0.60
 RISK_MEDIUM = 0.10
 RISK_HIGH = 0.30
 MIN_SAMPLES = 5
+# If the top two classes are this close, the model is torn, so we call it uncertain.
+MIN_MARGIN = 0.15
+NOT_COTTON = "Not a cotton leaf"
 
 # General, non-prescriptive guidance keyed by words found in the class name.
 # Class names depend on the dataset you train on, so matching is by keyword.
@@ -76,6 +79,11 @@ UNCERTAIN = {
 }
 
 
+NOT_COTTON_TEXT = {
+    "en": "This does not look like a cotton leaf, so no diagnosis is given. CottonCare only works on cotton. Photograph a single cotton leaf in daylight with the leaf filling most of the frame.",
+    "ur": "یہ کپاس کا پتا نہیں لگتا، اس لیے تشخیص نہیں دی جا رہی۔ کاٹن کیئر صرف کپاس کے لیے ہے۔ دن کی روشنی میں کپاس کے ایک پتے کی تصویر لیں جو فریم کو بھر دے۔",
+}
+
 HEALTHY_WORDS = ("healthy", "fresh", "normal")
 
 
@@ -131,8 +139,8 @@ def llm_advice(label: str, confidence: float, lang: str = "en") -> tuple[str, st
         return base, "built-in guide (Gemini unavailable)"
 
 
-def status_for(label: str, confidence: float) -> str:
-    if confidence < LOW_CONFIDENCE:
+def status_for(label: str, confidence: float, margin: float | None = None) -> str:
+    if confidence < LOW_CONFIDENCE or (margin is not None and margin < MIN_MARGIN):
         return "Uncertain"
     return "Healthy" if is_healthy(label) else "Problem detected"
 
@@ -143,8 +151,9 @@ def lot_risk(df: pd.DataFrame) -> tuple[str, float | None, str]:
     This is a simple rule of thumb, NOT a validated quality model.
     """
     n = len(df)
-    certain = df[df["status"] != "Uncertain"]
-    uncertain = n - len(certain)
+    not_cotton = int((df["status"] == NOT_COTTON).sum())
+    certain = df[~df["status"].isin(["Uncertain", NOT_COTTON])]
+    uncertain = n - len(certain) - not_cotton
     if len(certain) < MIN_SAMPLES:
         return (
             "Not enough data",
@@ -155,6 +164,6 @@ def lot_risk(df: pd.DataFrame) -> tuple[str, float | None, str]:
     level = "High" if share >= RISK_HIGH else "Medium" if share >= RISK_MEDIUM else "Low"
     note = (
         f"{share:.0%} of {len(certain)} confident samples show a problem"
-        f" ({uncertain} uncertain photo(s) excluded). Thresholds: Medium >= {RISK_MEDIUM:.0%}, High >= {RISK_HIGH:.0%}."
+        f" ({uncertain} uncertain and {not_cotton} not-cotton photo(s) excluded). Thresholds: Medium >= {RISK_MEDIUM:.0%}, High >= {RISK_HIGH:.0%}."
     )
     return level, share, note

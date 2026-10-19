@@ -21,15 +21,19 @@ Cotton diseases and pests are often spotted late, and buyers have no cheap way t
 
 ## Features
 - Single-photo diagnosis with the top-3 predictions
+- **Cotton-leaf gate:** photos of other plants or objects are rejected ("Not a cotton leaf") instead of being forced into a cotton class
+- **"Why this result?" heatmap** (Grad-CAM) showing where the model looked
+- **Photo-quality hints** (blur, too dark, glare) so users retake bad photos
 - English and Urdu advice
-- Low-confidence safeguard
-- Batch mode with CSV export and a lot risk level
+- Low-confidence and "torn between two answers" safeguards
+- Batch mode with CSV export, per-photo quality column, and a lot risk level (not-cotton and uncertain photos are excluded from the risk)
 
 ## Tech stack
 Python, PyTorch/torchvision (ResNet18), Gradio, pandas, matplotlib, Hugging Face Spaces.
 
 ## AI / API usage
 - **Trained model (the core AI):** ResNet18 pretrained on ImageNet, fine-tuned on four classes (healthy, bacterial blight, fusarium wilt, curl virus). Training uses class-balanced sampling (square-root weighting), label smoothing and augmentation. The best epoch is chosen on validation macro-F1, and results are reported on a held-out test split. See `train.py` and `metrics.json`.
+- **Cotton-leaf gate (`gate.py`, `make_gate_stats.py`):** a closed-set classifier must pick one of its classes even for a tomato leaf or a shoe. After training we store the feature fingerprint of the cotton training photos (`gate_stats.pt`: class means and a shared covariance). At prediction time a photo whose feature distance (Mahalanobis) to every class is above a threshold chosen on the validation split is rejected, and a colour check rejects photos with almost no plant colours. Results: <fill from gate_report.json>.
 - **Advice text:** rule-based, built into `core.py` (no pesticide names or doses; it always tells the user to confirm with an agriculture officer).
 - **Gemini API (optional, third-party):** `core.py` can rewrite the advice with the Gemini API if a `GEMINI_API_KEY` is set. **The deployed demo does not enable it**, so all advice shown there comes from the built-in guide.
 - **Lot risk level:** a simple rule of thumb (Medium at 10% or more and High at 30% or more of confidently-flagged photos), not a trained or validated quality model.
@@ -72,6 +76,7 @@ python app.py
 
 ## Known limitations
 - **Curl virus is not detected** in the held-out test (0 of 4) and fusarium wilt is only partly detected, because the dataset has very few photos of these (17 and 32 training images). A "healthy" result is not a guarantee, and the app says so.
+- The cotton-leaf gate is a distance threshold, not a guarantee: unusual real cotton photos may be rejected, and a very similar non-cotton leaf may still pass. It was checked on <N> non-cotton images only.
 - The test sets for the rare classes are tiny (4 and 8 images), so their scores are noisy.
 - Dataset photos are cleaner than most real-field photos, so real-world accuracy is likely lower. This was not tested on field photos.
 - Advice is general guidance, not a substitute for an agronomist. The Urdu text should be reviewed by a native speaker.
