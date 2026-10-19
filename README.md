@@ -9,8 +9,9 @@ Built for the NYLP AI Hackathon 2026.
 - **Team:** Ali Ahsan (solo): data, model training, app, deployment and documentation
 
 ## Problem
-Cotton diseases and pests are often spotted late, and buyers have no cheap way to check crop health before sourcing.
-<Add 2-3 sentences with a real, cited statistic about cotton in Pakistan.>
+"Cotton diseases and pests are often spotted late, and buyers have no cheap way to check crop health before sourcing.
+Cotton is one of Pakistan’s most important crops. 4.8 percent yield reduction (or 702,244 bales) in 2025 https://cropprotectionnetwork.org/publications/cotton-disease-loss-estimates-from-the-united-states-2025
+20–30% annual loss of yield, with cotton yields specifically dropping 39% below previous season levels in the 2024–2025 cycle due to heavy foliage and fungal disease pressure combined with adverse weather, from Roots Press / Pakistan Cotton Ginners Association. Diseases and pests such as leaf curl virus are often noticed late, when yield is already lost."
 
 **Who benefits:** smallholder farmers (a quick check with advice in English and Urdu) and industry users (ginneries, textile mills, contract-farming and extension programs) who need a fast field/lot health overview.
 
@@ -33,7 +34,8 @@ Python, PyTorch/torchvision (ResNet18), Gradio, pandas, matplotlib, Hugging Face
 
 ## AI / API usage
 - **Trained model (the core AI):** ResNet18 pretrained on ImageNet, fine-tuned on four classes (healthy, bacterial blight, fusarium wilt, curl virus). Training uses class-balanced sampling (square-root weighting), label smoothing and augmentation. The best epoch is chosen on validation macro-F1, and results are reported on a held-out test split. See `train.py` and `metrics.json`.
-- **Cotton-leaf gate (`gate.py`, `make_gate_stats.py`):** a closed-set classifier must pick one of its classes even for a tomato leaf or a shoe. After training we store the feature fingerprint of the cotton training photos (`gate_stats.pt`: class means and a shared covariance). At prediction time a photo whose feature distance (Mahalanobis) to every class is above a threshold chosen on the validation split is rejected, and a colour check rejects photos with almost no plant colours. Results: <fill from gate_report.json>.
+- **Cotton-leaf gate (`gate.py`, `make_gate_stats.py`):** a closed-set classifier must pick one of its classes even for a tomato leaf or a shoe. After training we store the feature fingerprint of the cotton training photos (`gate_stats.pt`: class means and a shared covariance). At prediction time a photo whose feature distance (Mahalanobis) to every class is above a threshold chosen on the validation split is rejected, and a colour check rejects photos with almost no plant colours. Results: On held-out cotton photos the gate accepted 98.7% of the test split (and 98.6% of the validation split, which was used to set the threshold), so real cotton leaves are rarely rejected. Rejection of non-cotton photos was checked by hand on a small number of sample photos, not measured at scale.
+
 - **Advice text:** rule-based, built into `core.py` (no pesticide names or doses; it always tells the user to confirm with an agriculture officer).
 - **Gemini API (optional, third-party):** `core.py` can rewrite the advice with the Gemini API if a `GEMINI_API_KEY` is set. **The deployed demo does not enable it**, so all advice shown there comes from the built-in guide.
 - **Lot risk level:** a simple rule of thumb (Medium at 10% or more and High at 30% or more of confidently-flagged photos), not a trained or validated quality model.
@@ -76,7 +78,7 @@ python app.py
 
 ## Known limitations
 - **Curl virus is not detected** in the held-out test (0 of 4) and fusarium wilt is only partly detected, because the dataset has very few photos of these (17 and 32 training images). A "healthy" result is not a guarantee, and the app says so.
-- The cotton-leaf gate is a distance threshold, not a guarantee: unusual real cotton photos may be rejected, and a very similar non-cotton leaf may still pass. It was checked on <N> non-cotton images only.
+- The cotton-leaf gate is a distance threshold, not a guarantee: unusual real cotton photos may be rejected, and a very similar non-cotton leaf may still pass. It was checked on  32 non-cotton images only.
 - The test sets for the rare classes are tiny (4 and 8 images), so their scores are noisy.
 - Dataset photos are cleaner than most real-field photos, so real-world accuracy is likely lower. This was not tested on field photos.
 - Advice is general guidance, not a substitute for an agronomist. The Urdu text should be reviewed by a native speaker.
