@@ -3,7 +3,7 @@
 AI screening of cotton leaf health for farmers, with batch field/lot reports for ginneries, mills and extension programs.
 Built for the NYLP AI Hackathon 2026.
 
-- **Live demo:** https://huggingface.co/spaces/AliAhsan5031/cotton_care
+- **Live demo:** https://huggingface.co/spaces/AliAhsan5031/Cotton_Care
 - **Demo video:** <add link>
 - **Source code:** https://github.com/aliahsan5031/Cotton-Care
 - **Team:** Ali Ahsan (solo): data, model training, app, deployment and documentation
@@ -33,7 +33,7 @@ Python, PyTorch/torchvision (ResNet18), Gradio, pandas, matplotlib, Hugging Face
 
 ## AI / API usage
 - **Trained model (the core AI):** ResNet18 pretrained on ImageNet, fine-tuned on four classes (healthy, bacterial blight, fusarium wilt, curl virus). Training uses class-balanced sampling (square-root weighting), label smoothing and augmentation. The best epoch is chosen on validation macro-F1, and results are reported on a held-out test split. See `train.py` and `metrics.json`.
-- **Cotton-leaf gate (`gate.py`, `make_gate_stats.py`):** a closed-set classifier must pick one of its classes even for a tomato leaf or a shoe. After training we store the feature fingerprint of the cotton training photos (`gate_stats.pt`: class means and a shared covariance). At prediction time a photo whose feature distance (Mahalanobis) to every class is above a threshold chosen on the validation split is rejected, and a colour check rejects photos with almost no plant **colours. Results**: On held-out cotton photos the gate accepted 98.7% of the test split (and 98.6% of the validation split, which was used to set the threshold), so real cotton leaves are rarely rejected. Rejection of non-cotton photos was checked by hand on a small number of sample photos, not measured at scale.
+- **Cotton-leaf gate (`gate.py`, `make_gate_stats.py`):** a closed-set classifier must pick one of its classes even for a tomato leaf or a shoe. After training we store the feature fingerprint of the cotton training photos (`gate_stats.pt`: class means and a shared covariance). At prediction time a photo whose feature distance (Mahalanobis) to every class is above a threshold chosen on the validation split is rejected, and a colour check rejects photos with almost no plant colours. Results: <fill from gate_report.json>.
 - **Advice text:** rule-based, built into `core.py` (no pesticide names or doses; it always tells the user to confirm with an agriculture officer).
 - **Gemini API (optional, third-party):** `core.py` can rewrite the advice with the Gemini API if a `GEMINI_API_KEY` is set. **The deployed demo does not enable it**, so all advice shown there comes from the built-in guide.
 - **Lot risk level:** a simple rule of thumb (Medium at 10% or more and High at 30% or more of confidently-flagged photos), not a trained or validated quality model.
@@ -56,7 +56,7 @@ Overall accuracy 91.3%, macro-F1 0.59, mean per-class recall 59%. Accuracy looks
 
 ## Model weights
 `model.pt` (about 45 MB) is larger than GitHub's browser upload limit, so the weights are stored in the Hugging Face Space repository:
-https://huggingface.co/spaces/AliAhsan5031/cotton_care/tree/main
+https://huggingface.co/spaces/AliAhsan5031/Cotton_Care/tree/main
 To run locally, download `model.pt` from there and put it next to `app.py`, or retrain with `train.py`.
 
 ## Setup
