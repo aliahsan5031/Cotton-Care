@@ -40,7 +40,7 @@ Python, PyTorch/torchvision (ResNet18), Gradio, pandas, matplotlib, Hugging Face
 - An AI coding assistant (Claude) was used as development help. All code was run, tested and reviewed by the author.
 
 ## Dataset and credit
-**Cotton Leaf Disease Dataset with Severity Levels**, Mendeley Data, V2, DOI: 10.17632/74jsdxtmx2.2, published 9 January 2025. Authors: <copy from the dataset page's citation box>.
+**Cotton Leaf Disease Dataset with Severity Levels**, Mendeley Data, V2, DOI: 10.17632/74jsdxtmx2.2, published 9 January 2025. Authors:  Shingne, Shraddha; Thakur, Parth; Jangid, Abhishek; Buchade, Punam; Jain, Ayush; Agarwal, Meet (2025), “Cotton Leaf Disease Dataset with Severity Levels”, Mendeley Data, V3, doi: 10.17632/74jsdxtmx2.3
 Licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 **Changes made:** only the `Cotton-Original` images were used (not the augmented sets); severity sub-folders were merged into their disease class; images were resized and normalized; and the data was split 70/15/15 (684 train, 147 validation, 149 test). The dataset authors have not endorsed this project.
 
