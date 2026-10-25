@@ -4,7 +4,7 @@ AI screening of cotton leaf health for farmers, with batch field/lot reports for
 Built for the NYLP AI Hackathon 2026.
 
 - **Live demo:** https://huggingface.co/spaces/AliAhsan5031/Cotton_Care
-- **Demo video:** <add link>
+- **Demo video:** https://drive.google.com/drive/folders/1uB3GKTEaWOHfZozbxlRvKzj36lzGdJKL?usp=sharing
 - **Source code:** https://github.com/aliahsan5031/Cotton-Care
 - **Team:** Ali Ahsan (solo): data, model training, app, deployment and documentation
 
