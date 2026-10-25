@@ -30,7 +30,7 @@ For scale: a 2025 report on US cotton disease losses estimated a 4.8% yield redu
 - English and Urdu advice
 - Low-confidence and "torn between two answers" safeguards
 - Batch mode with CSV export, per-photo quality column, and a lot risk level (not-cotton and uncertain photos are excluded from the risk)
-
+[![Architecture diagram](https://gitdiagram.com/diagram-badge.svg)](https://gitdiagram.com/aliahsan5031/cotton-care?utm_source=readme&utm_medium=badge)
 ## Tech stack
 Python, PyTorch/torchvision (ResNet18), Gradio, pandas, matplotlib, Hugging Face Spaces.
 
