@@ -20,6 +20,8 @@ For scale: a 2025 report on US cotton disease losses estimated a 4.8% yield redu
 2. **Responsible by design:** below 60% confidence the app says "uncertain, ask an expert" instead of guessing. The footer and advice state that the model is weak for curl virus and fusarium wilt.
 3. **Batch field/lot report:** upload up to 30 photos, tag the farm, field and lot, and get a results table, a distribution chart, a rule-based Low/Medium/High risk level and a CSV download.
 
+[![Architecture diagram of aliahsan5031/cotton-care](https://gitdiagram.com/aliahsan5031/cotton-care/diagram.png)](https://gitdiagram.com/aliahsan5031/cotton-care?utm_source=readme&utm_medium=picture)
+
 ## Features
 - Single-photo diagnosis with the top-3 predictions
 - **Cotton-leaf gate:** photos of other plants or objects are rejected ("Not a cotton leaf") instead of being forced into a cotton class
